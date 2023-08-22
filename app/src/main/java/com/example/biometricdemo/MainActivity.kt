@@ -180,6 +180,14 @@ class MainActivity : AppCompatActivity() {
         biometricPrompt.authenticate(promptInfo)
     }
 
+    /**
+     * 是否启用屏幕PIN等保护
+     *
+     * Returns whether the device is secured with a PIN, pattern or
+     * password.
+     *
+     * {@code true} if a PIN, pattern or password was set.
+     */
     private fun isDeviceSecure(): Boolean {
         if (keyguardManager == null) return false
         val isDeviceSecure = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && keyguardManager!!.isDeviceSecure
@@ -194,6 +202,9 @@ class MainActivity : AppCompatActivity() {
         return isKeyguardSecure
     }
 
+    /**
+     * 是否支持生物识别
+     */
     private fun isBiometricSupport(): Boolean {
         if (biometricManager == null) return false
         val canAuthenticate = biometricManager!!.canAuthenticate(BIOMETRIC_STRONG or BIOMETRIC_WEAK)
