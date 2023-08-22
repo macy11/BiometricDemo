@@ -208,6 +208,10 @@ class MainActivity : AppCompatActivity() {
         return canAuthenticate != BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE && canAuthenticate == BiometricManager.BIOMETRIC_SUCCESS
     }
 
+    /**
+     * 自定义返回类型 理论上没啥用处
+     * ps: 其实只要 isBiometricSupport()方法返回 true 就可以调用生物识别认证了
+     */
     private fun getEnrolledBiometrics(): List<BiometricType> {
         val biometrics: ArrayList<BiometricType> = ArrayList()
         if (biometricManager == null) return biometrics
