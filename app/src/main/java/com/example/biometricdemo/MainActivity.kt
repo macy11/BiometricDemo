@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var biometricPrompt: BiometricPrompt? = null
     private var mScreenLockResultLauncher: ActivityResultLauncher<Intent>? = null
     private var receiver: MyBroadcastReceiver? = null
+    private var isRegister: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,11 +130,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Biometric login for my app")
-            .setSubtitle("Log in using your biometric credential")
-            .setNegativeButtonText("Cancel")
-            .build()
+        promptInfo = BiometricPrompt.PromptInfo.Builder().setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential").setNegativeButtonText("Cancel").build()
         when (biometricManager?.canAuthenticate(BIOMETRIC_STRONG or BIOMETRIC_WEAK)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
                 Log.d("MY_APP_TAG", "App can authenticate using biometrics.")
@@ -195,12 +194,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
         // 创立锁屏暗码输入的弹框以及需求显示的文字
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setDeviceCredentialAllowed(true)
-            .setTitle("锁屏暗码")
-            .setSubtitle("请输入锁屏暗码验证您的身份")
-            .setConfirmationRequired(true)
-            .build()
+        val promptInfo = BiometricPrompt.PromptInfo.Builder().setDeviceCredentialAllowed(true).setTitle("锁屏暗码")
+            .setSubtitle("请输入锁屏暗码验证您的身份").setConfirmationRequired(true).build()
         // 发起验证
         biometricPrompt.authenticate(promptInfo)
     }
@@ -275,12 +270,17 @@ class MainActivity : AppCompatActivity() {
         val intentFilter = IntentFilter()
         intentFilter.addAction("action_passcode")
         registerReceiver(receiver, intentFilter, "jp.co.hokuyoubank.minefocus.dev.permission.PASSCODE_BROADCAST", null)
+        isRegister = true
         Log.e("macy777", "----> register")
     }
 
     override fun onDestroy() {
-        unregisterReceiver(receiver)
-        Log.e("macy777", "----> unregisterReceiver")
+        if (receiver != null && isRegister) {
+            unregisterReceiver(receiver)
+            receiver = null
+            isRegister = false
+            Log.e("macy777", "----> unregisterReceiver")
+        }
         super.onDestroy()
     }
 }
