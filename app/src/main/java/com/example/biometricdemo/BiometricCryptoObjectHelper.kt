@@ -47,7 +47,7 @@ class BiometricCryptoObjectHelper {
         try {
             cipher.init(Cipher.ENCRYPT_MODE or Cipher.DECRYPT_MODE, secretKey)
         } catch (e: KeyPermanentlyInvalidatedException) {
-            Log.e("MY_APP_TAG", "KeyPermanentlyInvalidatedException")
+            Log.e("MY_APP_TAG", "KeyPermanentlyInvalidatedException $e")
             _keystore.deleteEntry(KEY_NAME)
             if (retry) {
                 Log.e("MY_APP_TAG", "retry createCipher")
